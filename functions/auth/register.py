@@ -50,4 +50,6 @@ def handler(event, context):
 
     users.put_item(Item=new_user_dict)
 
-    return response(201, UserResponseDto.model_validate(new_user.model_dump()))
+    return response(
+        201, UserResponseDto.model_validate(new_user.model_dump()).model_dump_json()
+    )

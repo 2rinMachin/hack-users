@@ -53,3 +53,36 @@ def verify_session_token(token: str) -> User | None:
         return None
 
     return User(**user_item)
+
+
+def unauthorized(event):
+    return {
+        "principalId": "user",
+        "policyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Action": "execute-api:Invoke",
+                    "Effect": "Deny",
+                    "Resource": event["methodArn"],
+                }
+            ],
+        },
+    }
+
+
+def authorized(event, user: User):
+    return {
+        "principalId": user.id,
+        "policyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Action": "execute-api:Invoke",
+                    "Effect": "Allow",
+                    "Resource": event["methodArn"],
+                }
+            ],
+        },
+        "context": user.model_dump(),
+    }

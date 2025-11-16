@@ -36,9 +36,15 @@ functions:
           method: "get"
           cors: true
           authorizer:
-            name: "verify_auth"
+            name: "verify_user"
             type: "request"
             identitySource: "method.request.header.Authorization"
 
-  verify_auth:
-    handler: "functions/verify_auth.handler"
+  verify_user:
+    handler: "functions/verify_user.handler"
+
+  verify_staff:
+    handler: "functions/verify_staff.handler"
+
+  verify_authority:
+    handler: "functions/verify_authority.handler"
