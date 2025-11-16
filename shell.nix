@@ -8,5 +8,6 @@ pkgs.mkShell {
     zip
     (python311.withPackages (ps: with ps; [ pip ]))
     serverless
+    nodejs
   ];
 }
