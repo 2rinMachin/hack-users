@@ -1,0 +1,40 @@
+service: "hack-users"
+
+provider:
+  name: "aws"
+  runtime: "python3.11"
+  memorySize: 512
+  timeout: 20
+  iam:
+    role: "arn:aws:iam::${env:AWS_USER_ID}:role/LabRole"
+
+plugins:
+  - "serverless-python-requirements"
+
+functions:
+  register:
+    handler: "functions/auth/register.handler"
+    events:
+      - http:
+          path: "/auth/register"
+          method: "post"
+          cors: true
+
+  login:
+    handler: "functions/auth/login.handler"
+    events:
+      - http:
+          path: "/auth/login"
+          method: "post"
+          cors: true
+
+  get_self:
+    handler: "functions/get_self.handler"
+    events:
+      - http:
+          path: "/users/self"
+          method: "get"
+          cors: true
+
+  verify_auth:
+    handler: "functions/verify_auth.handler"

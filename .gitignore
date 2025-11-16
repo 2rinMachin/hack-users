@@ -1,0 +1,8 @@
+ build/
+.venv/
+.direnv/
+.cache/
+__pycache__/
+.env
+.serverless/
+node_modules/
