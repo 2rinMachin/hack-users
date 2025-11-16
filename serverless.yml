@@ -35,6 +35,10 @@ functions:
           path: "/users/self"
           method: "get"
           cors: true
+          authorizer:
+            name: "verify_auth"
+            type: "request"
+            identitySource: "method.request.header.Authorization"
 
   verify_auth:
     handler: "functions/verify_auth.handler"

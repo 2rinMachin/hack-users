@@ -2,6 +2,15 @@ import base64
 import hashlib
 import os
 import secrets
+from datetime import datetime, timezone
+
+import boto3
+
+from schemas import SessionToken, User
+
+dynamodb = boto3.resource("dynamodb")
+users = dynamodb.Table("hack-users")
+session_tokens = dynamodb.Table("hack-user-tokens")
 
 
 def hash_password(password: str) -> str:
@@ -19,3 +28,28 @@ def verify_password(password: str, stored: str) -> bool:
 
 def generate_session_token() -> str:
     return secrets.token_urlsafe(64)
+
+
+def verify_session_token(token: str) -> User | None:
+    if token == "":
+        return None
+
+    resp = session_tokens.get_item(Key={"token": token})
+    item: dict | None = resp.get("Item")
+
+    if item == None:
+        return None
+
+    token_data = SessionToken(**item)
+    expires_at = datetime.fromisoformat(token_data.expires_at)
+
+    if expires_at < datetime.now(timezone.utc):
+        return None
+
+    user_resp = users.get_item(Key={"id": token_data.user_id})
+    user_item: dict | None = user_resp.get("Item")
+
+    if user_item == None:
+        return None
+
+    return User(**user_item)
