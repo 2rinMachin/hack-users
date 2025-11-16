@@ -12,6 +12,14 @@ plugins:
   - "serverless-python-requirements"
 
 functions:
+  get_status:
+    handler: "functions/get_status.handler"
+    events:
+      - http:
+          path: "/"
+          method: "get"
+          cors: true
+
   register:
     handler: "functions/auth/register.handler"
     events:
