@@ -47,6 +47,7 @@ functions:
             name: "verify_user"
             type: "request"
             identitySource: "method.request.header.Authorization"
+            resultTtlInSeconds: 0
 
   verify_user:
     handler: "functions/verify_user.handler"
